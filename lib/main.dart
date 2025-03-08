@@ -118,7 +118,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 ElevatedButton(
                   onPressed: handleLogout,
-                  child: Text('Logout'),
+                  child: Text('Logout '),
                 ),
               ],
             )
