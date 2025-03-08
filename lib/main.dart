@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(RestaurantAttendanceApp());
 }
 
@@ -22,8 +26,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final TextEditingController idController = TextEditingController();
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  void handleLogin() {
+  void handleLogin() async {
     final workerId = idController.text.trim();
     if (workerId.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -31,7 +36,13 @@ class _HomePageState extends State<HomePage> {
       );
       return;
     }
-    // Here you would save the login time to a database or file
+
+    await _firestore.collection('attendance').add({
+      'workerId': workerId,
+      'timestamp': Timestamp.now(),
+      'status': 'login',
+    });
+
     print('Worker $workerId logged in at ${DateTime.now()}');
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Logged in successfully')),
@@ -39,7 +50,7 @@ class _HomePageState extends State<HomePage> {
     idController.clear();
   }
 
-  void handleLogout() {
+  void handleLogout() async {
     final workerId = idController.text.trim();
     if (workerId.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -47,7 +58,13 @@ class _HomePageState extends State<HomePage> {
       );
       return;
     }
-    // Here you would save the logout time to a database or file
+
+    await _firestore.collection('attendance').add({
+      'workerId': workerId,
+      'timestamp': Timestamp.now(),
+      'status': 'logout',
+    });
+
     print('Worker $workerId logged out at ${DateTime.now()}');
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Logged out successfully')),
@@ -58,39 +75,40 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(  // Center the widget here
+      body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,  // Center contents vertically
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/logo.png',  // Your logo image file path
-              width: 350,  // Adjust width if necessary
-              height: 100, // Adjust height if necessary
+              'assets/logo.png',
+              width: 350,
+              height: 100,
             ),
-            const SizedBox(height: 20),  // Space between icon and text field
+            const SizedBox(height: 20),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10), // Adds space from screen edges
+              padding: EdgeInsets.symmetric(horizontal: 20),
               child: TextField(
+                controller: idController,
                 decoration: InputDecoration(
                   labelText: 'Enter ID',
                   hintText: 'Type your worker ID',
-                  contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 12), // Adjusted padding
+                  contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 12),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(14), // Apple-style rounded edges
-                    borderSide: BorderSide(color: Colors.grey, width: 1.5), // Subtle border
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: BorderSide(color: Colors.grey, width: 1.5),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(14),
-                    borderSide: BorderSide(color: Colors.blue, width: 2), // Blue focus border
+                    borderSide: BorderSide(color: Colors.blue, width: 2),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(14),
-                    borderSide: BorderSide(color: Colors.grey.shade400, width: 1.5), // Default border
+                    borderSide: BorderSide(color: Colors.grey.shade400, width: 1.5),
                   ),
                 ),
               ),
             ),
-            const SizedBox(height: 20),  // Space between text field and buttons
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [

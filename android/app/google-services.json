@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "573581331126",
+    "project_id": "alibaba-workers",
+    "storage_bucket": "alibaba-workers.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:573581331126:android:02d71ed840defa758ab417",
+        "android_client_info": {
+          "package_name": "com.example.restaurant_workers"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCc7KQO_EfjzdJ14n1CpHzz6lOw_1zKYZQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
